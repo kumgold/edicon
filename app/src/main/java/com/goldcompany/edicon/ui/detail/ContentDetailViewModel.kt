@@ -11,13 +11,9 @@ import com.goldcompany.edicon.ui.detail.model.DetailContent
 import com.goldcompany.edicon.ui.util.ContentType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,48 +44,33 @@ class ContentDetailViewModel @Inject constructor(
         }
     }
 
-    val isFavorite: StateFlow<Boolean> = flow {
-        if (contentId > 0) {
-            when (contentType) {
-                ContentType.IMAGE -> emitAll(localRepository.getImageAsFlow(contentId))
-                ContentType.VIDEO -> emitAll(localRepository.getVideoAsFlow(contentId))
-                else -> emit(null)
-            }
-        } else {
-            emit(null)
-        }
-    }.map { entity ->
-        // entity가 DB에 존재하고 isFavorite가 true일 때만 true
-        entity != null && (entity as? ImageEntity)?.isFavorite ?: (entity as? VideoEntity)?.isFavorite ?: false
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = false
-    )
-
-    init {
-        if (contentId > 0 && contentType != null) {
-            fetchDetails(contentId, contentType)
-        } else {
-            _uiState.update { it.copy(isLoading = false, errorMessage = "잘못된 접근입니다.") }
-        }
-    }
-
     private fun fetchDetails(id: Int, contentType: ContentType) {
         viewModelScope.launch {
-            when (contentType) {
-                ContentType.IMAGE -> {
-                    val result = networkRepository.getImageById(id)
-                    result.onSuccess { image ->
-                        _uiState.update { it.copy(isLoading = false, content = DetailContent.Image(image)) }
-                    }.onFailure { error ->
-                        _uiState.update { it.copy(isLoading = false, errorMessage = error.message) }
+            _uiState.update { it.copy(isLoading = true) }
+
+            val dbFlow = when (contentType) {
+                ContentType.IMAGE -> localRepository.getImageAsFlow(id).map { it?.let { DetailContent.Image(it) } }
+                ContentType.VIDEO -> localRepository.getVideoAsFlow(id).map { it?.let { DetailContent.Video(it) } }
+            }
+
+            dbFlow.collectLatest { contentFromDb ->
+                if (contentFromDb != null) {
+                    _uiState.update { it.copy(isLoading = false, content = contentFromDb) }
+                } else {
+                    val result = when (contentType) {
+                        ContentType.IMAGE -> networkRepository.getImageById(id)
+                        ContentType.VIDEO -> networkRepository.getVideoById(id)
                     }
-                }
-                ContentType.VIDEO -> {
-                    val result = networkRepository.getVideoById(id)
-                    result.onSuccess { video ->
-                        _uiState.update { it.copy(isLoading = false, content = DetailContent.Video(video)) }
+
+                    result.onSuccess { entity ->
+                        when (entity) {
+                            is ImageEntity -> {
+                                _uiState.update { it.copy(isLoading = false, content = DetailContent.Image(entity)) }
+                            }
+                            is VideoEntity -> {
+                                _uiState.update { it.copy(isLoading = false, content = DetailContent.Video(entity)) }
+                            }
+                        }
                     }.onFailure { error ->
                         _uiState.update { it.copy(isLoading = false, errorMessage = error.message) }
                     }
@@ -101,15 +82,17 @@ class ContentDetailViewModel @Inject constructor(
     fun toggleFavorite() {
         viewModelScope.launch {
             val content = _uiState.value.content ?: return@launch
-            val currentStatus = isFavorite.value
+            val isCurrentlyFavorite = when(content) {
+                is DetailContent.Image -> content.entity.isFavorite
+                is DetailContent.Video -> content.entity.isFavorite
+            }
 
             when (content) {
                 is DetailContent.Image -> {
-                    // isFavorite 상태를 반전시켜 DB에 저장 (없으면 추가, 있으면 업데이트)
-                    localRepository.saveImage(content.entity.copy(isFavorite = !currentStatus))
+                    localRepository.updateImageFavoriteStatus(content.id, !isCurrentlyFavorite)
                 }
                 is DetailContent.Video -> {
-                    localRepository.saveVideo(content.entity.copy(isFavorite = !currentStatus))
+                    localRepository.updateVideoFavoriteStatus(content.id, !isCurrentlyFavorite)
                 }
             }
         }
