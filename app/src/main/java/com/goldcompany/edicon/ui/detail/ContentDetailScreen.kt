@@ -110,7 +110,10 @@ fun ContentDetailScreen(
 
 @Composable
 fun DetailContent(content: DetailContent, viewModel: ContentDetailViewModel) {
-    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
+    val isFavorite = when(content) {
+        is DetailContent.Image -> content.entity.isFavorite
+        is DetailContent.Video -> content.entity.isFavorite
+    }
     var isFullScreen by remember { mutableStateOf(false) }
     val commonPadding = dimensionResource(id = R.dimen.padding_large)
 
