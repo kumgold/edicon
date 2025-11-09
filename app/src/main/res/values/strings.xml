@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Edicon</string>
+
+    <!-- App specific -->
+    <string name="error_default">오류가 발생했습니다.</string>
+    <string name="error_image_load_failed">이미지 로드 실패</string>
+
+    <!-- Screen Titles -->
+    <string name="screen_title_detail">상세 화면</string>
+    <string name="screen_title_favorite">즐겨찾기</string>
+    <string name="screen_title_home">홈</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_back_button">뒤로 가기</string>
+    <string name="cd_add_to_favorites">즐겨찾기 추가</string>
+    <string name="cd_remove_from_favorites">즐겨찾기 해제</string>
+    <string name="cd_search_icon">검색 아이콘</string>
+    <string name="cd_content_detail_image">상세 이미지</string>
+    <string name="full_screen">전체 화면</string>
+
+    <!-- Labels and Hints -->
+    <string name="label_uploader">Uploader</string>
+    <string name="label_type">Type</string>
+    <string name="label_views">Views</string>
+    <string name="label_likes">Likes</string>
+    <string name="label_downloads">Downloads</string>
+    <string name="label_tags">Tags</string>
+    <string name="label_search_results">검색 결과</string>
+    <string name="hint_search">검색어를 입력하세요.</string>
+    <string name="message_favorites_empty">즐겨찾기한 항목이 없습니다.</string>
+    <string name="search_for_images_and_videos">이미지와 동영상을 검색하세요.</string>
+    <string name="clear_text">Clear Text</string>
+</resources>
