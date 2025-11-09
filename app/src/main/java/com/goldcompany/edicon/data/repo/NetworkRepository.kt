@@ -26,8 +26,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class NetworkRepository @Inject constructor(
-    private val pixabayApiService: PixabayApiService,
-    private val appDatabase: AppDatabase
+    private val pixabayApiService: PixabayApiService
 ) {
 
     /**
