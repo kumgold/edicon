@@ -1,4 +1,4 @@
-package com.goldcompany.edicon
+package com.goldcompany.edicon.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
