@@ -12,9 +12,6 @@ Edicon은 Pixabay API를 활용하여 고화질의 이미지와 동영상을 검
 - 즐겨찾기 (Bookmarks): Room Database를 사용하여 마음에 드는 미디어를 로컬에 저장하고 관리합니다.
 - 반응형 UI: Jetpack Compose를 사용하여 다양한 화면 크기에 대응하는 직관적인 UI를 구성했습니다.
 
-# 📱 스크린샷 (Screenshots)
-
-
 # 🛠 기술 스택 (Tech Stack)
 
 ## 🏗 Architecture
@@ -22,14 +19,16 @@ Edicon은 Pixabay API를 활용하여 고화질의 이미지와 동영상을 검
 - Clean Architecture: Presentation, Domain, Data 레이어로 관심사를 분리하여 유지보수성을 높였습니다.
 
 ## 📚 Libraries
-- UI: Jetpack Compose (Material3)
-- Asynchronous: Coroutines, Flow
-- Network: Retrofit2, OkHttp3
-- Image Loading: Coil
-- Video Player: ExoPlayer (Media3)
-- Local Database: Room
-- Pagination: Paging 3
-- Dependency Injection: Hilt
+|Category|Technology|
+|--------|----------|
+|UI|Jetpack Compose (Material3)|
+|Asynchronous|Coroutines, Flow|
+|Network|Retrofit2, OkHttp3|
+|Image Loading|Coil|
+|Video Player|ExoPlayer (Media3)|
+|Local Database|Room|
+|Pagination|Paging 3|
+|Dependency Injection|Hilt|
 
 ## 💡 구현 상세 (Implementation Details)
 ### 1. MVI Pattern 적용
@@ -70,7 +69,7 @@ com.example.edicon
 
 ## ⚖️ License
 ```Code
-Copyright 2024 [Your Name]
+Copyright 2024 [kumgold]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
