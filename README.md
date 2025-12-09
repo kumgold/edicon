@@ -1,4 +1,10 @@
 # EdiCon
+<p align="center">
+<img src="https://img.shields.io/badge/Kotlin-1.9.0-7F52FF?style=flat&logo=kotlin&logoColor=white"/>
+<img src="https://img.shields.io/badge/Android-Jetpack_Compose-3DDC84?style=flat&logo=android&logoColor=white"/>
+<img src="https://img.shields.io/badge/Architecture-MVI-blue?style=flat"/>
+<img src="https://img.shields.io/badge/API-Pixabay-orange?style=flat"/>
+</p>
 
 # 🎬 Edicon (Edit + Icon)
 
